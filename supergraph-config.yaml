@@ -1,0 +1,5 @@
+subgraphs:
+  ss:
+    routing_url: /ss/graphql
+    schema:
+      subgraph_url: /ss/graphql

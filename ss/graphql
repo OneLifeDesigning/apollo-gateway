@@ -1,0 +1,75 @@
+directive @key(fields: String!) on OBJECT | INTERFACE
+
+directive @extends on OBJECT | INTERFACE
+
+directive @external on OBJECT | FIELD_DEFINITION
+
+directive @requires(fields: String!) on FIELD_DEFINITION
+
+directive @provides(fields: String!) on FIELD_DEFINITION
+
+type Product {
+  id: ID!
+  title: String
+  url: String
+  description: String
+  price: Price
+  salesRank(category: ProductCategory = ALL): Int
+  salesRankOverall: Int
+  salesRankInCategory: Int
+  category: ProductCategory
+  images(size: Int = 1000): [String]
+  primaryImage(size: Int = 1000): String
+}
+
+type Price {
+  cost: Money
+
+  """A number between 0 and 1 signifying the % discount"""
+  deal: Float
+  dealSavings: Money
+}
+
+type Department {
+  category: ProductCategory
+  url: String
+}
+
+enum ProductCategory {
+  ALL
+  GIFT_CARDS
+  ELECTRONICS
+  CAMERA_N_PHOTO
+  VIDEO_GAMES
+  BOOKS
+  CLOTHING
+}
+
+type Money {
+  amount: Float
+  currencyCode: CURRENCY_CODE
+}
+
+enum CURRENCY_CODE {
+  USD
+  EUR
+}
+
+type Query {
+  _entities(representations: [_Any!]!): [_Entity]!
+  _service: _Service!
+  bestSellers(category: ProductCategory = ALL): [Product]
+  categories: [Department]
+  product(id: ID!): Product
+}
+
+union _Entity = Product
+
+scalar _Any
+
+type _Service {
+  """
+  The sdl representing the federated service capabilities. Includes federation directives, removes federation types, and includes rest of full schema after schema directives have been applied
+  """
+  sdl: String
+}
